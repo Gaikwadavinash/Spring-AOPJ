@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:lang="http://www.springframework.org/schema/lang"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+<!-- Target Class Object -->
+<bean id="bankService" class="com.nt.service.BankService"/>
+
+<!-- Advice Class Object(PerformanceAdvice(class name change to Performance advice class ) advice and performance Monitoring) -->
+ <bean id="PerformaceAround" class="com.nt.advice.PerformanceAdviceClasss"/>
+
+<!-- caching advice  -->
+<bean id="cacheMap"  class="com.nt.advice.CachingAdvice"/>
+<aop:config>
+<!-- create pointCut OGNL Expression  -->
+<aop:pointcut expression="execution(double com.nt.service.BankService.*(..))" id="ptc"/>
+
+<!--  Make spring class as AopAsepetj AOPClass -->
+ <aop:aspect ref="PerformaceAround" order="10" >
+ <aop:around method="performace" pointcut-ref="ptc"/>
+</aop:aspect>  
+
+
+<aop:aspect ref="cacheMap" order="1">
+<aop:around method="performace" pointcut-ref="ptc"/>
+</aop:aspect>
+</aop:config>
+
+</beans>
